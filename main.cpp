@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <dirent.h>
 #include <cmath>
 
@@ -11,7 +13,7 @@
 using namespace std;
 using namespace cimg_library;
 
-#define FONTSIZE 23
+#define FONTSIZE 10
 
 string drawchars = "1234567890!@#$^&*()-=_+abcdefghijklmnopqrstuvwxyz,.<>?/;:\\\"'[]{}|~` ";
 
@@ -49,6 +51,14 @@ int get_chars(int fontsize, CImgList<float> &imgs, char **names)
   DIR *dir;
   struct dirent *dirent;
   int i = 0;
+
+
+  struct stat st = {0};
+
+  if (stat("txtimgs", &st) == -1) {
+    mkdir("txtimgs", 0700);
+  }
+  
   if ((dir = opendir("txtimgs"))) {
     while ((dirent = readdir(dir))) {
       snprintf(buffer, sizeof(buffer), "txtimgs/%s", dirent->d_name);
